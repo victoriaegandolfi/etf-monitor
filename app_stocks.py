@@ -1,145 +1,164 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import yfinance as yf
 import json
 from pathlib import Path
-from datetime import datetime
-from bcb import sgs
+import numpy as np
 
-# =====================================================
-# PASTA DE DADOS
-# =====================================================
-ROOT_DIR = Path(__file__).parent.resolve()
-DATA_DIR = ROOT_DIR / "data" / "etfs"
-DATA_DIR.mkdir(parents=True, exist_ok=True)
+# ===============================
+# CONFIG
+# ===============================
 
-# =====================================================
-# ETFS
-# =====================================================
-ETFS = {
-    "BOVA11": "BOVA11.SA",
-    "IVVB11": "IVVB11.SA",
-    "GOLD11": "GOLD11.SA",
-    "BIXN39": "BIXN39.SA"
-}
+st.set_page_config(
+    page_title="Dashboard de Ações",
+    layout="wide"
+)
 
-st.title("Dashboard de ETFs")
+DATA_FILE = Path("data/stocks/dashboard.json")
 
-# =====================================================
-# Funções utilitárias
-# =====================================================
-def scalar(x):
-    if isinstance(x, pd.Series):
-        if x.empty:
-            return np.nan
-        return float(x.iloc[-1])
-    try:
-        return float(x)
-    except Exception:
-        return np.nan
+# ===============================
+# LOAD DATA
+# ===============================
 
-def get_ipca_12m():
-    df = sgs.get({"ipca": 433})
-    return scalar(df["ipca"]) / 100
+with open(DATA_FILE, "r") as f:
+    raw = json.load(f)
 
-def annualized_return(prices: pd.Series):
-    prices = prices.dropna()
-    if len(prices) < 2:
-        return np.nan
-    return float((prices.iloc[-1] / prices.iloc[0]) ** (252 / len(prices)) - 1)
+df = pd.DataFrame(raw["data"])
 
-def max_drawdown(prices: pd.Series):
-    prices = prices.dropna()
-    if prices.empty:
-        return np.nan
-    cummax = prices.cummax()
-    return float((prices / cummax - 1).min())
+# ===============================
+# SIDEBAR
+# ===============================
 
-def max_last_year(close: pd.Series):
-    if close.empty:
-        return np.nan
-    last_date = close.index[-1]
-    start_date = last_date - pd.DateOffset(years=1)
-    window = close[close.index >= start_date]
-    if window.empty:
-        return np.nan
-    return float(window.max())
+st.sidebar.title("📊 Filtros")
 
-# =====================================================
-# ANALISE DOS ETFS
-# =====================================================
-IPCA_12M = get_ipca_12m()
-summary = []
-signals = []
+strategy = st.sidebar.selectbox(
+    "Estratégia",
+    ["Todas", "Fundamentalista", "Dividendos"]
+)
 
-for etf, ticker in ETFS.items():
-    df = yf.download(ticker, period="6y", auto_adjust=True, progress=False)
-    if df.empty or "Close" not in df.columns:
-        continue
-    close = df["Close"].dropna()
-    if len(close) < 60:
-        continue
+signal_filter = st.sidebar.multiselect(
+    "Sinal",
+    ["Comprar", "Manter", "Reduzir"],
+    default=["Comprar", "Manter", "Reduzir"]
+)
 
-    price = scalar(close.iloc[-1])
-    ma_1y = scalar(close.rolling(252).mean().iloc[-1])
-    ret_1a = scalar(price / scalar(close.iloc[-252]) - 1) if len(close) >= 252 else np.nan
-    ret_5a = scalar(annualized_return(close.tail(252 * 5))) if len(close) >= 252*5 else np.nan
-    ret_real_1a = scalar((1 + ret_1a) / (1 + IPCA_12M) - 1) if not pd.isna(ret_1a) else np.nan
-    vol = scalar(close.pct_change().std()) * np.sqrt(252)
-    dd = scalar(max_drawdown(close))
-    max_1a = max_last_year(close)
+selected_ticker = st.sidebar.selectbox(
+    "Ativo (para gráfico)",
+    sorted(df["Ticker"].unique())
+)
 
-    # sinal
-    dist_ma = dist_topo = np.nan
-    signal = "NEUTRO"
-    if not pd.isna(ma_1y) and not pd.isna(max_1a):
-        dist_ma = scalar(price / ma_1y - 1)
-        dist_topo = scalar(price / max_1a - 1)
-        if dist_ma < -0.10 and dist_topo < -0.20:
-            signal = "COMPRAR"
-        elif dist_ma > 0.20 or dist_topo > -0.05:
-            signal = "REDUZIR"
+# ===============================
+# FILTERS
+# ===============================
 
-    # histórico
-    hist = (close / close.iloc[0] * 100).reset_index()
-    hist.columns = ["date", "price_norm"]
-    hist["date"] = hist["date"].astype(str)
-    hist.to_json(DATA_DIR / f"{etf}_history.json", orient="records")
+filtered = df.copy()
 
-    summary.append({
-        "ETF": etf,
-        "Preço": round(price,2),
-        "Retorno 1a (%)": None if pd.isna(ret_1a) else round(ret_1a*100,2),
-        "Retorno real 1a (%)": None if pd.isna(ret_real_1a) else round(ret_real_1a*100,2),
-        "Retorno 5a a.a. (%)": None if pd.isna(ret_5a) else round(ret_5a*100,2),
-        "Volatilidade (%)": None if pd.isna(vol) else round(vol*100,2),
-        "Drawdown máx (%)": None if pd.isna(dd) else round(dd*100,2)
-    })
+if strategy != "Todas":
+    filtered = filtered[filtered["Estratégias"].apply(lambda x: strategy in x)]
 
-    signals.append({
-        "ETF": etf,
-        "Preço": round(price,2),
-        "Dist. MM 1a (%)": None if pd.isna(dist_ma) else round(dist_ma*100,2),
-        "Dist. topo 1a (%)": None if pd.isna(dist_topo) else round(dist_topo*100,2),
-        "Sinal": signal
-    })
+filtered = filtered[filtered["Sinal"].isin(signal_filter)]
 
-# salva JSON
-output = {
-    "updated_at": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
-    "ipca_12m": round(IPCA_12M*100,2),
-    "summary": summary,
-    "signals": signals
-}
+# ===============================
+# HEADER
+# ===============================
 
-with open(DATA_DIR / "dashboard_etfs.json", "w", encoding="utf-8") as f:
-    json.dump(output, f, indent=2, ensure_ascii=False)
+st.title("📈 Dashboard de Ações")
+st.caption(f"Atualizado em: {raw['updated_at']}")
 
-st.write(f"Última atualização: {output['updated_at']}")
-st.subheader("Resumo dos ETFs")
-st.dataframe(pd.DataFrame(summary))
-st.subheader("Sinais de preço")
-st.dataframe(pd.DataFrame(signals))
+# ===============================
+# TABELA PRINCIPAL (DECISÃO)
+# ===============================
+
+st.subheader("📌 Visão Geral — Decisão")
+
+display_cols = [
+    "Ticker",
+    "Preço Atual",
+    "Preço Justo (Graham)",
+    "Desvio (%)",
+    "Sinal"
+]
+
+st.dataframe(
+    filtered[display_cols]
+    .sort_values("Desvio (%)", ascending=True)
+    .reset_index(drop=True),
+    use_container_width=True
+)
+
+# ===============================
+# GRÁFICO PREÇO x GRAHAM
+# ===============================
+
+st.subheader(f"📉 Preço x Graham — {selected_ticker}")
+
+row = df[df["Ticker"] == selected_ticker].iloc[0]
+
+chart_df = pd.DataFrame({
+    "Valor": ["Preço Atual", "Preço Justo (Graham)"],
+    "Preço": [row["Preço Atual"], row["Preço Justo (Graham)"]]
+})
+
+st.bar_chart(chart_df.set_index("Valor"))
+
+st.caption(f"Sinal atual: **{row['Sinal']}**")
+
+# ===============================
+# CALENDÁRIO DE DIVIDENDOS
+# ===============================
+
+st.subheader("💰 Calendário de Dividendos (meses recorrentes)")
+
+months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+          "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+
+calendar_rows = []
+
+for _, r in df.iterrows():
+    row = {"Ticker": r["Ticker"]}
+    for i, m in enumerate(months, start=1):
+        row[m] = "✔️" if i in r["Dividendos Meses"] else ""
+    calendar_rows.append(row)
+
+calendar_df = pd.DataFrame(calendar_rows)
+
+st.dataframe(calendar_df, use_container_width=True)
+
+# ===============================
+# EXPOSIÇÃO DA CARTEIRA
+# ===============================
+
+st.subheader("📦 Exposição da Carteira")
+
+exposure_cols = [
+    "Ticker",
+    "Quantidade",
+    "Preço Médio",
+    "Valor Investido",
+    "Valor Atual",
+    "Sinal"
+]
+
+exposure_df = df[df["Quantidade"].notna()][exposure_cols].copy()
+
+if not exposure_df.empty:
+    total_value = exposure_df["Valor Atual"].sum()
+
+    exposure_df["% Carteira"] = (
+        exposure_df["Valor Atual"] / total_value * 100
+    ).round(2)
+
+    st.dataframe(
+        exposure_df.sort_values("% Carteira", ascending=False),
+        use_container_width=True
+    )
+else:
+    st.info("Nenhuma posição informada em exposure.csv")
+
+# ===============================
+# FOOTER
+# ===============================
+
+st.caption("Modelo fundamentalista com Número de Graham • Projeto pessoal de investimentos")
+
 
 
