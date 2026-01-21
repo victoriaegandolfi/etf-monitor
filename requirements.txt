@@ -3,3 +3,5 @@ pandas
 numpy
 yfinance
 python-bcb
+matplotlib
+seaborn
