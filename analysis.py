@@ -16,7 +16,7 @@ ETFS = {
     "BIXN39": "BIXN39.SA"
 }
 
-DATA_DIR = Path("data")
+DATA_DIR = Path("data/etfs")
 DATA_DIR.mkdir(exist_ok=True)
 
 # =====================================================
