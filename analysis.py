@@ -53,6 +53,21 @@ def max_drawdown(prices: pd.Series):
     cummax = prices.cummax()
     return float((prices / cummax - 1).min())
 
+def max_last_year(close: pd.Series):
+    if close.empty:
+        return np.nan
+
+    last_date = close.index[-1]
+    start_date = last_date - pd.DateOffset(years=1)
+
+    window = close[close.index >= start_date]
+
+    if window.empty:
+        return np.nan
+
+    return float(window.max())
+
+
 
 # =====================================================
 # IPCA
@@ -118,10 +133,7 @@ for etf, ticker in ETFS.items():
     # ---------------------
     # Topo 1 ano
     # ---------------------
-    max_1a = (
-        scalar(close.tail(252).max())
-        if len(close) >= 252 else np.nan
-    )
+    max_1a = max_last_year(close)
 
     # ---------------------
     # Sinal de preço
