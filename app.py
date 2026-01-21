@@ -2,123 +2,88 @@ import json
 import streamlit as st
 import pandas as pd
 
-st.set_page_config(
-    page_title="Monitor de ETFs",
-    layout="wide"
-)
+import streamlit as st
+import pandas as pd
+import json
+import matplotlib.pyplot as plt
+from pathlib import Path
 
-# ----------------------------------
-# LOAD DATA
-# ----------------------------------
-@st.cache_data
-def load_data():
-    with open("data/summary.json") as f:
-        return json.load(f)
+st.set_page_config(page_title="Monitor de ETFs", layout="wide")
 
-data = load_data()
-etfs = data["etfs"]
-ipca = data["ipca"]
+DATA_DIR = Path("data")
 
-# ----------------------------------
-# HEADER
-# ----------------------------------
+with open(DATA_DIR / "dashboard.json") as f:
+    data = json.load(f)
+
+df_summary = pd.DataFrame(data["summary"])
+df_signals = pd.DataFrame(data["signals"])
+
+# =====================
+# Header
+# =====================
 st.title("📊 Monitor de ETFs")
 st.caption(
-    f"IPCA 12m: {ipca['ipca_12m']*100:.2f}% | "
-    f"Proxy IPCA 5a: {ipca['ipca_5y_proxy']*100:.2f}%"
+    f"Última atualização: {data['updated_at']} | "
+    f"IPCA 12m: {data['ipca_12m']}%"
 )
 
-# ----------------------------------
-# KPI CARDS
-# ----------------------------------
-st.subheader("📌 Visão Geral (1 ano)")
+# =====================
+# Tabela 1 — Resumo
+# =====================
+st.subheader("Resumo dos ETFs")
+st.dataframe(df_summary, use_container_width=True)
 
-cols = st.columns(len(etfs))
+# =====================
+# Tabela 2 — Sinais
+# =====================
+st.subheader("Sinais de preço (MM 1 ano)")
 
-for col, (name, d) in zip(cols, etfs.items()):
-    with col:
-        st.metric(
-            label=name,
-            value=f"R$ {d['price']}",
-            delta=f"{d['returns']['1y']['real']*100:.2f}% real"
-        )
-
-        if d["alerts"]:
-            for a in d["alerts"]:
-                st.warning(a)
-
-# ----------------------------------
-# TABELA COMPARATIVA
-# ----------------------------------
-st.divider()
-st.subheader("📈 Comparação de Desempenho")
-
-rows = []
-
-for name, d in etfs.items():
-    rows.append({
-        "ETF": name,
-        "Preço": d["price"],
-        "Ret 1a Nom (%)": d["returns"]["1y"]["nominal"] * 100,
-        "Ret 1a Real (%)": d["returns"]["1y"]["real"] * 100,
-        "Ret 5a Real (%)": d["returns"]["5y"]["real"] * 100,
-        "Vol 1a (%)": d["risk"]["vol_1y"] * 100,
-        "DD Máx (%)": d["risk"]["drawdown_max"] * 100,
-        "Dist MM200 (%)": d["risk"]["dist_mm200"] * 100,
-    })
-
-df = pd.DataFrame(rows).set_index("ETF")
+def color_signal(val):
+    if val == "COMPRAR":
+        return "background-color: #c6f6d5"
+    if val == "REDUZIR":
+        return "background-color: #fed7d7"
+    return ""
 
 st.dataframe(
-    df.style
-    .format("{:.2f}")
-    .background_gradient(cmap="RdYlGn", subset=["Ret 1a Real (%)", "Ret 5a Real (%)"])
-    .background_gradient(cmap="RdYlGn_r", subset=["Vol 1a (%)", "DD Máx (%)"])
+    df_signals.style.applymap(color_signal, subset=["Sinal"]),
+    use_container_width=True
 )
 
-# ----------------------------------
-# RANKINGS
-# ----------------------------------
-st.divider()
-st.subheader("🏆 Rankings")
+# =====================
+# Gráfico comparativo
+# =====================
+st.subheader("Comparação de preço (base 100)")
 
-col1, col2 = st.columns(2)
+selected = st.multiselect(
+    "Selecione os ETFs",
+    options=df_summary["ETF"].tolist(),
+    default=df_summary["ETF"].tolist()
+)
 
-with col1:
-    st.markdown("**Melhor retorno real (1 ano)**")
-    st.table(
-        df[["Ret 1a Real (%)"]]
-        .sort_values("Ret 1a Real (%)", ascending=False)
-        .head(4)
-    )
+fig, ax = plt.subplots(figsize=(10, 5))
 
-with col2:
-    st.markdown("**Menor risco (volatilidade 1 ano)**")
-    st.table(
-        df[["Vol 1a (%)"]]
-        .sort_values("Vol 1a (%)")
-        .head(4)
-    )
+for etf in selected:
+    hist = pd.read_json(DATA_DIR / f"{etf}_history.json")
+    ax.plot(hist["date"], hist["price_norm"], label=etf)
 
-# ----------------------------------
-# ALERTAS CONSOLIDADOS
-# ----------------------------------
-st.divider()
-st.subheader("🚨 Alertas Ativos")
+ax.set_ylabel("Índice (base 100)")
+ax.legend()
+ax.grid(True)
 
-alerts = []
+st.pyplot(fig)
 
-for name, d in etfs.items():
-    for a in d["alerts"]:
-        alerts.append(f"**{name}** → {a}")
+# =====================
+# Ajuda
+# =====================
+with st.expander("ℹ️ Como interpretar os sinais"):
+    st.markdown("""
+**🟢 COMPRAR**  
+Preço bem abaixo da média móvel de 1 ano e distante do topo recente.
 
-if alerts:
-    for a in alerts:
-        st.error(a)
-else:
-    st.success("Nenhum alerta crítico no momento ✅")
+**🔴 REDUZIR**  
+Preço muito acima da média ou próximo do topo do último ano.
 
-# ----------------------------------
-# FOOTER
-# ----------------------------------
-st.caption("Dados: Yahoo Finance | IPCA: Banco Central (SGS)")
+**🟡 NEUTRO**  
+Sem desvios relevantes.
+""")
