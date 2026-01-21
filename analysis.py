@@ -4,7 +4,7 @@ import numpy as np
 import json
 import os
 from bcb import sgs
-#from config import *
+from config import *
 
 # ----------------------------------
 # PARÂMETROS DE TEMPO
