@@ -10,9 +10,9 @@ from pathlib import Path
 
 st.set_page_config(page_title="Monitor de ETFs", layout="wide")
 
-DATA_DIR = Path("data")
+DATA_DIR = Path("data/etfs")
 
-with open(DATA_DIR / "dashboard.json") as f:
+with open(DATA_DIR / "dashboard_etfs.json") as f:
     data = json.load(f)
 
 df_summary = pd.DataFrame(data["summary"])
