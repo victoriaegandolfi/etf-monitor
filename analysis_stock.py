@@ -114,6 +114,23 @@ for symbol in ALL_TICKERS:
 
     # Exposição
     exp = exposure_df[exposure_df["ticker"] == symbol]
+
+    owners = []
+    positions = []
+    
+    for _, row in exp.iterrows():
+        qty = float(row["quantidade"])
+        avg_price = float(row["preco_medio"])
+        invested = qty * avg_price
+        current_value = qty * price if not np.isnan(price) else np.nan
+    
+        positions.append({
+            "owner": row["owner"],
+            "quantidade": qty,
+            "preco_medio": avg_price,
+            "valor_investido": round(invested, 2),
+            "valor_atual": round(current_value, 2) if not np.isnan(current_value) else None
+        })
     if not exp.empty:
         qty = float(exp["quantidade"].iloc[0])
         avg_price = float(exp["preco_medio"].iloc[0])
@@ -134,6 +151,8 @@ for symbol in ALL_TICKERS:
         "Preço Médio": avg_price,
         "Valor Investido": round(invested, 2) if not np.isnan(invested) else None,
         "Valor Atual": round(current_value, 2) if not np.isnan(current_value) else None,
+        "Exposicao": positions
+
     })
 
 
