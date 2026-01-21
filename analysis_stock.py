@@ -168,4 +168,5 @@ output = {
 with open(DATA_DIR / "dashboard_stocks.json", "w") as f:
     json.dump(output, f, indent=2, ensure_ascii=False)
 
+
 print("✅ analysis_stocks.py finalizado com sucesso")
