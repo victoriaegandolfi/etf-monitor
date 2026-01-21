@@ -17,7 +17,7 @@ ETFS = {
 }
 
 DATA_DIR = Path("data/etfs")
-DATA_DIR.mkdir(exist_ok=True)
+DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 # =====================================================
 # Funções utilitárias (ESCALARES APENAS)
