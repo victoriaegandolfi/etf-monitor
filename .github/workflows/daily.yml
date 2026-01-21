@@ -5,7 +5,7 @@ on:
     # Roda todo dia às 09:00 UTC (06:00 no Brasil)
     - cron: "0 13 * * *"
 
-  # Permite rodar manualmente pelo GitHub
+  # Permite rodar manualmente
   workflow_dispatch:
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Baixa o repositório
+      # 1️⃣ Checkout com histórico completo (ESSENCIAL)
       - name: Checkout do repositório
         uses: actions/checkout@v4
         with:
@@ -31,18 +31,21 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 4️⃣ Executa o script de análise
+      # 4️⃣ Garante que a branch local está atualizada
+      - name: Sincronizar com a main
+        run: |
+          git pull origin main --rebase
+
+      # 5️⃣ Executa o script de análise
       - name: Rodar análise dos ETFs
         run: |
           python analysis.py
 
-      # 5️⃣ Commit automático se houver mudanças
+      # 6️⃣ Commit e push dos JSONs (se houver mudanças)
       - name: Commit e push dos JSONs
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git pull --rebase origin main
 
           git add data/*.json
 
