@@ -16,6 +16,8 @@ ETFS = {
     "BIXN39": "BIXN39.SA"
 }
 
+
+
 DATA_DIR = Path("data/etfs")
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -193,7 +195,16 @@ output = {
     "summary": summary,
     "signals": signals
 }
+from pathlib import Path
 
-with open(DATA_DIR / "dashboard_etfs.json", "w") as f:
+# Diretório raiz do repo
+ROOT_DIR = Path(__file__).parent.resolve()
+
+# Pasta de dados específica
+DATA_DIR = ROOT_DIR / "data" / "etfs"
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+# Salvar JSON
+with open(DATA_DIR / "dashboard_etfs.json", "w", encoding="utf-8") as f:
     json.dump(output, f, indent=2, ensure_ascii=False)
 
