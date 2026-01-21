@@ -1,0 +1,104 @@
+{
+  "ipca": {
+    "ipca_12m": 0.0033,
+    "ipca_5y_proxy": 0.0166
+  },
+  "etfs": {
+    "BOVA11": {
+      "ticker": "BOVA11.SA",
+      "name": "BOVA11",
+      "price": 166.42,
+      "returns": {
+        "1y": {
+          "nominal": 0.389,
+          "real": 0.3845,
+          "liquido": 0.3832
+        },
+        "5y": {
+          "nominal": 0.4587,
+          "real": 0.4348,
+          "liquido": 0.4283
+        }
+      },
+      "risk": {
+        "vol_1y": 0.1531,
+        "drawdown_max": -0.4693,
+        "drawdown_atual": 0.0,
+        "dist_mm200": 0.1824
+      },
+      "alerts": []
+    },
+    "IVVB11": {
+      "ticker": "IVVB11.SA",
+      "name": "IVVB11",
+      "price": 410.58,
+      "returns": {
+        "1y": {
+          "nominal": 0.0105,
+          "real": 0.0071,
+          "liquido": 0.0045
+        },
+        "5y": {
+          "nominal": 0.9477,
+          "real": 0.9159,
+          "liquido": 0.9029
+        }
+      },
+      "risk": {
+        "vol_1y": 0.171,
+        "drawdown_max": -0.3071,
+        "drawdown_atual": -0.052,
+        "dist_mm200": 0.047
+      },
+      "alerts": []
+    },
+    "GOLD11": {
+      "ticker": "GOLD11.SA",
+      "name": "GOLD11",
+      "price": 26.84,
+      "returns": {
+        "1y": {
+          "nominal": 0.5605,
+          "real": 0.5553,
+          "liquido": 0.552
+        },
+        "5y": {
+          "nominal": 1.4356,
+          "real": 1.3958,
+          "liquido": 1.3793
+        }
+      },
+      "risk": {
+        "vol_1y": 0.2042,
+        "drawdown_max": -0.2022,
+        "drawdown_atual": 0.0,
+        "dist_mm200": 0.2675
+      },
+      "alerts": []
+    },
+    "BIXN39": {
+      "ticker": "BIXN39.SA",
+      "name": "BIXN39",
+      "price": 18.85,
+      "returns": {
+        "1y": {
+          "nominal": 0.0969,
+          "real": 0.0933,
+          "liquido": 0.09
+        },
+        "5y": {
+          "nominal": NaN,
+          "real": NaN,
+          "liquido": NaN
+        }
+      },
+      "risk": {
+        "vol_1y": 0.3319,
+        "drawdown_max": -0.4151,
+        "drawdown_atual": -0.0472,
+        "dist_mm200": 0.0868
+      },
+      "alerts": []
+    }
+  }
+}
