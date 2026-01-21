@@ -1,0 +1,24 @@
+{
+  "ticker": "GOLD11.SA",
+  "name": "GOLD11",
+  "price": 26.92,
+  "returns": {
+    "1y": {
+      "nominal": 0.5651,
+      "real": 0.56,
+      "liquido": 0.5567
+    },
+    "5y": {
+      "nominal": 1.4428,
+      "real": 1.4029,
+      "liquido": 1.3864
+    }
+  },
+  "risk": {
+    "vol_1y": 0.2043,
+    "drawdown_max": -0.2022,
+    "drawdown_atual": 0.0,
+    "dist_mm200": 0.2713
+  },
+  "alerts": []
+}

@@ -1,0 +1,24 @@
+{
+  "ticker": "BOVA11.SA",
+  "name": "BOVA11",
+  "price": 166.78,
+  "returns": {
+    "1y": {
+      "nominal": 0.392,
+      "real": 0.3875,
+      "liquido": 0.3862
+    },
+    "5y": {
+      "nominal": 0.4618,
+      "real": 0.4379,
+      "liquido": 0.4314
+    }
+  },
+  "risk": {
+    "vol_1y": 0.1534,
+    "drawdown_max": -0.4693,
+    "drawdown_atual": 0.0,
+    "dist_mm200": 0.1849
+  },
+  "alerts": []
+}

@@ -7,72 +7,72 @@
     "BOVA11": {
       "ticker": "BOVA11.SA",
       "name": "BOVA11",
-      "price": 166.42,
+      "price": 166.78,
       "returns": {
         "1y": {
-          "nominal": 0.389,
-          "real": 0.3845,
-          "liquido": 0.3832
+          "nominal": 0.392,
+          "real": 0.3875,
+          "liquido": 0.3862
         },
         "5y": {
-          "nominal": 0.4587,
-          "real": 0.4348,
-          "liquido": 0.4283
+          "nominal": 0.4618,
+          "real": 0.4379,
+          "liquido": 0.4314
         }
       },
       "risk": {
-        "vol_1y": 0.1531,
+        "vol_1y": 0.1534,
         "drawdown_max": -0.4693,
         "drawdown_atual": 0.0,
-        "dist_mm200": 0.1824
+        "dist_mm200": 0.1849
       },
       "alerts": []
     },
     "IVVB11": {
       "ticker": "IVVB11.SA",
       "name": "IVVB11",
-      "price": 410.58,
+      "price": 411.5,
       "returns": {
         "1y": {
-          "nominal": 0.0105,
-          "real": 0.0071,
-          "liquido": 0.0045
+          "nominal": 0.0127,
+          "real": 0.0094,
+          "liquido": 0.0068
         },
         "5y": {
-          "nominal": 0.9477,
-          "real": 0.9159,
-          "liquido": 0.9029
+          "nominal": 0.9521,
+          "real": 0.9202,
+          "liquido": 0.9072
         }
       },
       "risk": {
-        "vol_1y": 0.171,
+        "vol_1y": 0.1709,
         "drawdown_max": -0.3071,
-        "drawdown_atual": -0.052,
-        "dist_mm200": 0.047
+        "drawdown_atual": -0.0498,
+        "dist_mm200": 0.0494
       },
       "alerts": []
     },
     "GOLD11": {
       "ticker": "GOLD11.SA",
       "name": "GOLD11",
-      "price": 26.84,
+      "price": 26.92,
       "returns": {
         "1y": {
-          "nominal": 0.5605,
-          "real": 0.5553,
-          "liquido": 0.552
+          "nominal": 0.5651,
+          "real": 0.56,
+          "liquido": 0.5567
         },
         "5y": {
-          "nominal": 1.4356,
-          "real": 1.3958,
-          "liquido": 1.3793
+          "nominal": 1.4428,
+          "real": 1.4029,
+          "liquido": 1.3864
         }
       },
       "risk": {
-        "vol_1y": 0.2042,
+        "vol_1y": 0.2043,
         "drawdown_max": -0.2022,
         "drawdown_atual": 0.0,
-        "dist_mm200": 0.2675
+        "dist_mm200": 0.2713
       },
       "alerts": []
     },

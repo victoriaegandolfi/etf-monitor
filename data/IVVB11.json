@@ -1,0 +1,24 @@
+{
+  "ticker": "IVVB11.SA",
+  "name": "IVVB11",
+  "price": 411.5,
+  "returns": {
+    "1y": {
+      "nominal": 0.0127,
+      "real": 0.0094,
+      "liquido": 0.0068
+    },
+    "5y": {
+      "nominal": 0.9521,
+      "real": 0.9202,
+      "liquido": 0.9072
+    }
+  },
+  "risk": {
+    "vol_1y": 0.1709,
+    "drawdown_max": -0.3071,
+    "drawdown_atual": -0.0498,
+    "dist_mm200": 0.0494
+  },
+  "alerts": []
+}
