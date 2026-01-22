@@ -140,8 +140,8 @@ for _, r in df.iterrows():
 if exposure_rows:
     exposure_df = pd.DataFrame(exposure_rows)
 
-    # % da carteira por owner
-    exposure_df["% Carteira"] = exposure_df.groupby("Owner")["Valor Atual"].apply(
+    # % da carteira por owner — corrigido com transform()
+    exposure_df["% Carteira"] = exposure_df.groupby("Owner")["Valor Atual"].transform(
         lambda x: (x / x.sum() * 100).round(2)
     )
 
@@ -151,9 +151,4 @@ if exposure_rows:
     )
 else:
     st.info("Nenhuma posição informada em exposure.csv")
-
-# ===============================
-# FOOTER
-# ===============================
-st.caption("Modelo fundamentalista com Número de Graham • Projeto pessoal de investimentos")
 
