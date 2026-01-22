@@ -13,14 +13,12 @@ st.set_page_config(
     layout="wide"
 )
 
-DATA_FILE = Path("data/stocks/dashboard_stocks.json")
+ROOT_DIR = Path(__file__).parent.resolve()
+DATA_DIR = ROOT_DIR / "data" / "stocks"
 
-# ===============================
-# LOAD DATA
-# ===============================
+with open(DATA_DIR / "dashboard_stocks.json", "r", encoding="utf-8") as f:
+    data = json.load(f)
 
-with open(DATA_FILE, "r") as f:
-    raw = json.load(f)
 
 df = pd.DataFrame(raw["data"])
 
