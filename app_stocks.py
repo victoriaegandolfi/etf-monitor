@@ -13,7 +13,7 @@ st.set_page_config(
     layout="wide"
 )
 
-DATA_FILE = Path("data/stocks/dashboard.json")
+DATA_FILE = Path("data/stocks/dashboard_stocks.json")
 
 # ===============================
 # LOAD DATA
