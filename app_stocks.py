@@ -95,6 +95,65 @@ chart_df = pd.DataFrame({
 st.bar_chart(chart_df.set_index("Valor"))
 st.caption(f"Sinal atual: **{row['Sinal']}**")
 
-# =======================
+# ===============================
+# CALENDÁRIO DE DIVIDENDOS
+# ===============================
+st.subheader("💰 Calendário de Dividendos (meses recorrentes)")
 
+months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+          "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+
+calendar_rows = []
+
+for _, r in df.iterrows():
+    row_calendar = {"Ticker": r["Ticker"]}
+    for i, m in enumerate(months, start=1):
+        row_calendar[m] = "✔️" if i in r.get("Dividendos Meses", []) else ""
+    calendar_rows.append(row_calendar)
+
+calendar_df = pd.DataFrame(calendar_rows)
+st.dataframe(calendar_df, use_container_width=True)
+
+# ===============================
+# EXPOSIÇÃO DA CARTEIRA (MULTI-OWNER)
+# ===============================
+st.subheader("📦 Exposição da Carteira")
+
+exposure_rows = []
+
+for _, r in df.iterrows():
+    ticker = r["Ticker"]
+    signal = r["Sinal"]
+    exp_list = r.get("Exposicao", [])
+    
+    for exp in exp_list:
+        exposure_rows.append({
+            "Ticker": ticker,
+            "Owner": exp.get("owner", "Desconhecido"),
+            "Quantidade": exp.get("quantidade", np.nan),
+            "Preço Médio": exp.get("preco_medio", np.nan),
+            "Valor Investido": exp.get("valor_investido", np.nan),
+            "Valor Atual": exp.get("valor_atual", np.nan),
+            "Sinal": signal
+        })
+
+if exposure_rows:
+    exposure_df = pd.DataFrame(exposure_rows)
+
+    # % da carteira por owner
+    exposure_df["% Carteira"] = exposure_df.groupby("Owner")["Valor Atual"].apply(
+        lambda x: (x / x.sum() * 100).round(2)
+    )
+
+    st.dataframe(
+        exposure_df.sort_values(["Owner", "% Carteira"], ascending=[True, False]),
+        use_container_width=True
+    )
+else:
+    st.info("Nenhuma posição informada em exposure.csv")
+
+# ===============================
+# FOOTER
+# ===============================
+st.caption("Modelo fundamentalista com Número de Graham • Projeto pessoal de investimentos")
 
