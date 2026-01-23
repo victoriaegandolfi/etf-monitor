@@ -1,71 +1,71 @@
 {
-  "updated_at": "2026-01-22 13:38 UTC",
+  "updated_at": "2026-01-23 13:35 UTC",
   "ipca_12m": 0.33,
   "summary": [
     {
       "ETF": "BOVA11",
-      "Preço": 169.71,
-      "Retorno 1a (%)": 41.07,
-      "Retorno real 1a (%)": 40.61,
-      "Retorno 5a a.a. (%)": 8.15,
-      "Volatilidade (%)": 24.61,
+      "Preço": 173.25,
+      "Retorno 1a (%)": 44.47,
+      "Retorno real 1a (%)": 44.0,
+      "Retorno 5a a.a. (%)": 8.63,
+      "Volatilidade (%)": 24.63,
       "Drawdown máx (%)": -46.93
     },
     {
       "ETF": "IVVB11",
-      "Preço": 413.7,
-      "Retorno 1a (%)": 1.45,
-      "Retorno real 1a (%)": 1.12,
-      "Retorno 5a a.a. (%)": 14.21,
+      "Preço": 411.09,
+      "Retorno 1a (%)": 1.71,
+      "Retorno real 1a (%)": 1.38,
+      "Retorno 5a a.a. (%)": 13.76,
       "Volatilidade (%)": 21.49,
       "Drawdown máx (%)": -30.71
     },
     {
       "ETF": "GOLD11",
-      "Preço": 26.75,
-      "Retorno 1a (%)": 54.45,
-      "Retorno real 1a (%)": 53.94,
-      "Retorno 5a a.a. (%)": 19.34,
+      "Preço": 27.16,
+      "Retorno 1a (%)": 58.18,
+      "Retorno real 1a (%)": 57.66,
+      "Retorno 5a a.a. (%)": 19.81,
       "Volatilidade (%)": 18.56,
       "Drawdown máx (%)": -20.22
     },
     {
       "ETF": "BIXN39",
-      "Preço": 18.82,
-      "Retorno 1a (%)": 9.51,
-      "Retorno real 1a (%)": 9.15,
+      "Preço": 18.9,
+      "Retorno 1a (%)": 9.54,
+      "Retorno real 1a (%)": 9.18,
       "Retorno 5a a.a. (%)": null,
-      "Volatilidade (%)": 31.96,
+      "Volatilidade (%)": 31.93,
       "Drawdown máx (%)": -41.51
     }
   ],
   "signals": [
     {
       "ETF": "BOVA11",
-      "Preço": 169.71,
-      "Dist. MM 1a (%)": 23.45,
+      "Preço": 173.25,
+      "Dist. MM 1a (%)": 25.82,
       "Dist. topo 1a (%)": 0.0,
       "Sinal": "REDUZIR"
     },
     {
       "ETF": "IVVB11",
-      "Preço": 413.7,
-      "Dist. MM 1a (%)": 6.14,
-      "Dist. topo 1a (%)": -4.47,
-      "Sinal": "REDUZIR"
+      "Preço": 411.09,
+      "Dist. MM 1a (%)": 5.47,
+      "Dist. topo 1a (%)": -5.08,
+      "Sinal": "NEUTRO"
     },
     {
       "ETF": "GOLD11",
-      "Preço": 26.75,
-      "Dist. MM 1a (%)": 30.55,
+      "Preço": 27.16,
+      "Dist. MM 1a (%)": 32.29,
       "Dist. topo 1a (%)": 0.0,
       "Sinal": "REDUZIR"
     },
     {
       "ETF": "BIXN39",
-      "Preço": 18.82,
-      "Dist. MM 1a (%)": 10.71,
-      "Dist. topo 1a (%)": -4.88,
+      "Preço": 18.9,
+      "Dist. MM 1a (%)": 11.09,
+      "Dist. topo 1a (%)": -4.47,
       "Sinal": "REDUZIR"
     }
   ]
