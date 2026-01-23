@@ -18,14 +18,17 @@ ETFS = {
     "BIXN39": "BIXN39.SA",
 
     # EUA
+    "IVV": "IVV",
     "VUG": "VUG",
     "SCHD": "SCHD",
-    "IVV": "IVV",
     "QQQ": "QQQ",
     "XLK": "XLK",
     "IYW": "IYW",
+
+    # Big Tech / MAGs proxy
     "MAGS": "MAGS"
 }
+
 
 ROOT_DIR = Path(__file__).parent.resolve()
 DATA_DIR = ROOT_DIR / "data" / "etfs"
