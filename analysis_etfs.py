@@ -11,11 +11,6 @@ from bcb import sgs
 # =====================================================
 
 ETFS = {
-    # Brasil
-    "BOVA11": "BOVA11.SA",
-    "IVVB11": "IVVB11.SA",
-    "GOLD11": "GOLD11.SA",
-    "BIXN39": "BIXN39.SA",
 
     # EUA
     "VUG": "VUG",
