@@ -1,71 +1,92 @@
 {
-  "updated_at": "2026-01-23 13:35 UTC",
-  "ipca_12m": 0.33,
-  "summary": [
+  "updated_at": "2026-01-23 21:40 UTC",
+  "data": [
     {
-      "ETF": "BOVA11",
-      "Preço": 173.25,
-      "Retorno 1a (%)": 44.47,
-      "Retorno real 1a (%)": 44.0,
-      "Retorno 5a a.a. (%)": 8.63,
-      "Volatilidade (%)": 24.63,
-      "Drawdown máx (%)": -46.93
-    },
-    {
-      "ETF": "IVVB11",
-      "Preço": 411.09,
-      "Retorno 1a (%)": 1.71,
-      "Retorno real 1a (%)": 1.38,
-      "Retorno 5a a.a. (%)": 13.76,
-      "Volatilidade (%)": 21.49,
-      "Drawdown máx (%)": -30.71
-    },
-    {
-      "ETF": "GOLD11",
-      "Preço": 27.16,
-      "Retorno 1a (%)": 58.18,
-      "Retorno real 1a (%)": 57.66,
-      "Retorno 5a a.a. (%)": 19.81,
-      "Volatilidade (%)": 18.56,
-      "Drawdown máx (%)": -20.22
-    },
-    {
-      "ETF": "BIXN39",
-      "Preço": 18.9,
-      "Retorno 1a (%)": 9.54,
-      "Retorno real 1a (%)": 9.18,
-      "Retorno 5a a.a. (%)": null,
-      "Volatilidade (%)": 31.93,
-      "Drawdown máx (%)": -41.51
-    }
-  ],
-  "signals": [
-    {
-      "ETF": "BOVA11",
-      "Preço": 173.25,
-      "Dist. MM 1a (%)": 25.82,
-      "Dist. topo 1a (%)": 0.0,
+      "Ticker": "VUG",
+      "Preço Atual": 483.5,
+      "Média 200d": 440.21,
+      "Distância MM (%)": 9.83,
+      "Distância Topo (%)": -4.02,
+      "CAGR 5y (%)": 13.76,
+      "Max Drawdown (%)": -35.61,
+      "Volatilidade (%)": 22.32,
       "Sinal": "REDUZIR"
     },
     {
-      "ETF": "IVVB11",
-      "Preço": 411.09,
-      "Dist. MM 1a (%)": 5.47,
-      "Dist. topo 1a (%)": -5.08,
-      "Sinal": "NEUTRO"
-    },
-    {
-      "ETF": "GOLD11",
-      "Preço": 27.16,
-      "Dist. MM 1a (%)": 32.29,
-      "Dist. topo 1a (%)": 0.0,
+      "Ticker": "SCHD",
+      "Preço Atual": 29.14,
+      "Média 200d": 26.62,
+      "Distância MM (%)": 9.48,
+      "Distância Topo (%)": -0.1,
+      "CAGR 5y (%)": 9.67,
+      "Max Drawdown (%)": -16.84,
+      "Volatilidade (%)": 14.63,
       "Sinal": "REDUZIR"
     },
     {
-      "ETF": "BIXN39",
-      "Preço": 18.9,
-      "Dist. MM 1a (%)": 11.09,
-      "Dist. topo 1a (%)": -4.47,
+      "Ticker": "IVV",
+      "Preço Atual": 692.24,
+      "Média 200d": 624.37,
+      "Distância MM (%)": 10.87,
+      "Distância Topo (%)": -0.86,
+      "CAGR 5y (%)": 14.06,
+      "Max Drawdown (%)": -24.53,
+      "Volatilidade (%)": 16.93,
+      "Sinal": "REDUZIR"
+    },
+    {
+      "Ticker": "QQQ",
+      "Preço Atual": 622.72,
+      "Média 200d": 553.53,
+      "Distância MM (%)": 12.5,
+      "Distância Topo (%)": -1.93,
+      "CAGR 5y (%)": 14.41,
+      "Max Drawdown (%)": -35.12,
+      "Volatilidade (%)": 22.62,
+      "Sinal": "REDUZIR"
+    },
+    {
+      "Ticker": "XLK",
+      "Preço Atual": 145.09,
+      "Média 200d": 126.85,
+      "Distância MM (%)": 14.38,
+      "Distância Topo (%)": -4.44,
+      "CAGR 5y (%)": 17.7,
+      "Max Drawdown (%)": -33.56,
+      "Volatilidade (%)": 24.68,
+      "Sinal": "REDUZIR"
+    },
+    {
+      "Ticker": "IYW",
+      "Preço Atual": 199.72,
+      "Média 200d": 175.14,
+      "Distância MM (%)": 14.03,
+      "Distância Topo (%)": -5.44,
+      "CAGR 5y (%)": 17.93,
+      "Max Drawdown (%)": -39.44,
+      "Volatilidade (%)": 25.85,
+      "Sinal": "MANTER"
+    },
+    {
+      "Ticker": "MAGS",
+      "Preço Atual": 65.62,
+      "Média 200d": 56.81,
+      "Distância MM (%)": 15.5,
+      "Distância Topo (%)": -3.59,
+      "CAGR 5y (%)": 44.02,
+      "Max Drawdown (%)": -29.91,
+      "Volatilidade (%)": 26.43,
+      "Sinal": "REDUZIR"
+    },
+    {
+      "Ticker": "BOVA11",
+      "Preço Atual": 175.7,
+      "Média 200d": 137.7,
+      "Distância MM (%)": 27.6,
+      "Distância Topo (%)": 0.0,
+      "CAGR 5y (%)": 9.51,
+      "Max Drawdown (%)": -26.4,
+      "Volatilidade (%)": 18.41,
       "Sinal": "REDUZIR"
     }
   ]
