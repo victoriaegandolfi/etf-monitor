@@ -60,11 +60,15 @@ for etf in ETFS:
     # Topo 12 meses
     df["Topo_12m"] = df["Close"].rolling(MM_WINDOW).max()
 
-    latest = df.iloc[-1]
+    if np.isnan(mm) or np.isnan(topo):
+        signal = "NEUTRO"
+        dist_mm = np.nan
+        dist_topo = np.nan
+    else:
+        dist_mm = (price / mm - 1) * 100
+        dist_topo = (price / topo - 1) * 100
+        signal = get_signal(price, mm, dist_topo)
 
-    price = latest["Close"]
-    mm = latest["MM_1Y"]
-    topo = latest["Topo_12m"]
 
     dist_mm = (price / mm - 1) * 100
     dist_topo = (price / topo - 1) * 100
