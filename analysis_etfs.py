@@ -1,109 +1,129 @@
-import streamlit as st
+import yfinance as yf
 import pandas as pd
+import numpy as np
 import json
 from pathlib import Path
-import matplotlib.pyplot as plt
+from datetime import datetime
 
 # ===============================
 # CONFIG
 # ===============================
 
-st.set_page_config(page_title="📊 Monitor de ETFs", layout="wide")
+ETFS = [
+    "VUG", "SCHD", "IVV", "QQQ", "XLK", "IYW", "MAGS",
+    "BOVA11.SA"
+]
 
 ROOT_DIR = Path(__file__).parent.resolve()
 DATA_DIR = ROOT_DIR / "data" / "etfs"
-DASH_FILE = DATA_DIR / "dashboard_etfs.json"
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+OUTPUT_FILE = DATA_DIR / "dashboard_etfs.json"
 
 # ===============================
-# LOAD DATA
+# FUNÇÕES
 # ===============================
 
-if not DASH_FILE.exists():
-    st.error("Arquivo dashboard_etfs.json não encontrado.")
-    st.stop()
+def get_signal(price, mm, dist_topo):
+    if np.isnan(mm) or np.isnan(dist_topo):
+        return "NEUTRO"
 
-with open(DASH_FILE, "r", encoding="utf-8") as f:
-    raw = json.load(f)
+    if price < mm * 0.9 and dist_topo < -20:
+        return "COMPRAR"
+    elif price > mm * 1.05 and dist_topo > -5:
+        return "REDUZIR"
+    else:
+        return "MANTER"
 
-if "data" not in raw or len(raw["data"]) == 0:
-    st.warning("Dashboard carregado, mas sem dados de ETFs.")
-    st.stop()
 
-df = pd.DataFrame(raw["data"])
+def cagr(prices: pd.Series):
+    if len(prices) < 2:
+        return np.nan
+    return float((prices.iloc[-1] / prices.iloc[0]) ** (252 / len(prices)) - 1)
 
-# ===============================
-# HEADER
-# ===============================
 
-st.title("📊 Monitor de ETFs")
-st.caption(f"Última atualização: {raw['updated_at']}")
+def max_drawdown(prices: pd.Series):
+    cummax = prices.cummax()
+    drawdown = prices / cummax - 1
+    return float(drawdown.min())
 
-# ===============================
-# TABELA PRINCIPAL
-# ===============================
-
-st.subheader("📌 Visão Geral")
-
-display_cols = [
-    "Ticker",
-    "Preço Atual",
-    "Média 200d",
-    "Distância MM (%)",
-    "Distância Topo (%)",
-    "CAGR 5y (%)",
-    "Volatilidade (%)",
-    "Sinal"
-]
-
-st.dataframe(
-    df[display_cols]
-    .sort_values("Distância MM (%)", ascending=True)
-    .reset_index(drop=True),
-    use_container_width=True
-)
 
 # ===============================
-# FILTROS
+# PROCESSAMENTO
 # ===============================
 
-st.subheader("🎯 Análise individual")
+results = []
 
-selected = st.selectbox(
-    "Selecione o ETF",
-    sorted(df["Ticker"].unique())
-)
+for ticker in ETFS:
+    print(f"Processando {ticker}")
 
-row = df[df["Ticker"] == selected].iloc[0]
+    try:
+        df = yf.download(ticker, period="5y", auto_adjust=True, progress=False)
+
+        if df.empty or "Close" not in df:
+            print(f"Sem dados para {ticker}")
+            continue
+
+        close = df["Close"].dropna()
+
+        price = float(close.iloc[-1])
+
+        mm = (
+            float(close.rolling(252).mean().iloc[-1])
+            if len(close) >= 252
+            else np.nan
+        )
+
+        topo = (
+            float(close.tail(252).max())
+            if len(close) >= 252
+            else np.nan
+        )
+
+        if np.isnan(mm) or np.isnan(topo):
+            dist_mm = np.nan
+            dist_topo = np.nan
+            signal = "NEUTRO"
+        else:
+            dist_mm = float((price / mm - 1) * 100)
+            dist_topo = float((price / topo - 1) * 100)
+            signal = get_signal(price, mm, dist_topo)
+
+        returns = close.pct_change().dropna()
+
+        if len(returns) < 30:
+            vol = np.nan
+        else:
+            vol = float(returns.std() * np.sqrt(252))
+
+        result = {
+            "Ticker": ticker.replace(".SA", ""),
+            "Preço Atual": round(price, 2),
+            "Média 200d": None if np.isnan(mm) else round(mm, 2),
+            "Distância MM (%)": None if np.isnan(dist_mm) else round(dist_mm, 2),
+            "Distância Topo (%)": None if np.isnan(dist_topo) else round(dist_topo, 2),
+            "CAGR 5y (%)": None if np.isnan(cagr(close)) else round(cagr(close) * 100, 2),
+            "Max Drawdown (%)": None if np.isnan(max_drawdown(close)) else round(max_drawdown(close) * 100, 2),
+            "Volatilidade (%)": None if np.isnan(vol) else round(vol * 100, 2),
+            "Sinal": signal
+        }
+
+        results.append(result)
+
+    except Exception as e:
+        print(f"Erro em {ticker}: {e}")
 
 # ===============================
-# MÉTRICAS
+# SALVAR DASHBOARD
 # ===============================
 
-col1, col2, col3, col4 = st.columns(4)
+output = {
+    "updated_at": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
+    "data": results
+}
 
-col1.metric("Preço Atual", f"${row['Preço Atual']}")
-col2.metric("Média 200d", "-" if pd.isna(row["Média 200d"]) else f"${row['Média 200d']}")
-col3.metric("Distância MM", "-" if pd.isna(row["Distância MM (%)"]) else f"{row['Distância MM (%)']}%")
-col4.metric("Sinal", row["Sinal"])
+with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+    json.dump(output, f, indent=2, ensure_ascii=False)
 
-# ===============================
-# AJUDA
-# ===============================
+print("✅ dashboard_etfs.json atualizado com sucesso")
 
-with st.expander("ℹ️ Como interpretar os sinais"):
-    st.markdown("""
-**🟢 COMPRAR**  
-Preço bem abaixo da média de 1 ano e distante do topo recente.
-
-**🟡 MANTER**  
-Preço próximo da média ou sem distorções relevantes.
-
-**🔴 REDUZIR**  
-Preço muito acima da média ou próximo do topo.
-""")
-
-# ===============================
-# FOOTER
-# ===============================
-
-st.caption("Modelo quantitativo • ETFs globais e Brasil • Projeto pessoal de investimentos")
