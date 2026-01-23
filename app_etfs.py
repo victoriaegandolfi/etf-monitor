@@ -1,109 +1,90 @@
 import streamlit as st
 import pandas as pd
 import json
-import matplotlib.pyplot as plt
 from pathlib import Path
+import matplotlib.pyplot as plt
 
 # ===============================
 # CONFIG
 # ===============================
 
-st.set_page_config(page_title="Monitor de ETFs", layout="wide")
+st.set_page_config(page_title="📊 Monitor de ETFs", layout="wide")
 
-# Caminho absoluto baseado no arquivo atual
 ROOT_DIR = Path(__file__).parent.resolve()
 DATA_DIR = ROOT_DIR / "data" / "etfs"
-DASHBOARD_FILE = DATA_DIR / "dashboard_etfs.json"
+DASH_FILE = DATA_DIR / "dashboard_etfs.json"
 
 # ===============================
 # LOAD DATA
 # ===============================
 
-if not DASHBOARD_FILE.exists():
-    st.error(f"Arquivo não encontrado: {DASHBOARD_FILE}")
+if not DASH_FILE.exists():
+    st.error("Arquivo dashboard_etfs.json não encontrado.")
     st.stop()
 
-with open(DASHBOARD_FILE, "r", encoding="utf-8") as f:
+with open(DASH_FILE, "r", encoding="utf-8") as f:
     raw = json.load(f)
 
-df_summary = pd.DataFrame(raw.get("summary", []))
-df_signals = pd.DataFrame(raw.get("signals", []))
+if "data" not in raw or len(raw["data"]) == 0:
+    st.warning("Dashboard carregado, mas sem dados de ETFs.")
+    st.stop()
+
+df = pd.DataFrame(raw["data"])
 
 # ===============================
 # HEADER
 # ===============================
 
 st.title("📊 Monitor de ETFs")
-st.caption(
-    f"Última atualização: {raw.get('updated_at')} | "
-    f"IPCA 12m: {raw.get('ipca_12m')}%"
+st.caption(f"Última atualização: {raw['updated_at']}")
+
+# ===============================
+# TABELA PRINCIPAL
+# ===============================
+
+st.subheader("📌 Visão Geral")
+
+display_cols = [
+    "Ticker",
+    "Preço Atual",
+    "Média 200d",
+    "Distância MM (%)",
+    "Distância Topo (%)",
+    "CAGR 5y (%)",
+    "Volatilidade (%)",
+    "Sinal"
+]
+
+st.dataframe(
+    df[display_cols]
+    .sort_values("Distância MM (%)", ascending=True)
+    .reset_index(drop=True),
+    use_container_width=True
 )
 
-if df_summary.empty:
-    st.warning("Dashboard carregado, mas sem dados de ETFs.")
-    st.stop()
-
 # ===============================
-# TABELA — RESUMO
+# FILTROS
 # ===============================
 
-st.subheader("📌 Resumo dos ETFs")
-st.dataframe(df_summary, use_container_width=True)
+st.subheader("🎯 Análise individual")
 
-# ===============================
-# TABELA — SINAIS
-# ===============================
-
-st.subheader("🚦 Sinais de Preço")
-
-def color_signal(val):
-    if val == "COMPRAR":
-        return "background-color: #c6f6d5"
-    if val == "REDUZIR":
-        return "background-color: #fed7d7"
-    return ""
-
-if not df_signals.empty:
-    st.dataframe(
-        df_signals.style.applymap(color_signal, subset=["Sinal"]),
-        use_container_width=True
-    )
-else:
-    st.info("Nenhum sinal disponível.")
-
-# ===============================
-# GRÁFICO — PREÇO NORMALIZADO
-# ===============================
-
-st.subheader("📈 Comparação de Preço (Base 100)")
-
-available_etfs = df_summary["ETF"].tolist()
-
-selected = st.multiselect(
-    "Selecione os ETFs",
-    options=available_etfs,
-    default=available_etfs
+selected = st.selectbox(
+    "Selecione o ETF",
+    sorted(df["Ticker"].unique())
 )
 
-if selected:
-    fig, ax = plt.subplots(figsize=(10, 5))
+row = df[df["Ticker"] == selected].iloc[0]
 
-    for etf in selected:
-        hist_file = DATA_DIR / f"{etf}_history.json"
-        if not hist_file.exists():
-            continue
+# ===============================
+# MÉTRICAS
+# ===============================
 
-        hist = pd.read_json(hist_file)
-        ax.plot(hist["date"], hist["price_norm"], label=etf)
+col1, col2, col3, col4 = st.columns(4)
 
-    ax.set_ylabel("Índice (Base 100)")
-    ax.set_xlabel("Data")
-    ax.legend()
-    ax.grid(True)
-
-    st.pyplot(fig)
-else:
-    st.info("Selecione pelo menos um ETF para visualizar o gráfico.")
+col1.metric("Preço Atual", f"${row['Preço Atual']}")
+col2.metric("Média 200d", "-" if pd.isna(row["Média 200d"]) else f"${row['Média 200d']}")
+col3.metric("Distância MM", "-" if pd.isna(row["Distância MM (%)"]) else f"{row['Distância MM (%)']}%")
+col4.metric("Sinal", row["Sinal"])
 
 # ===============================
 # AJUDA
@@ -112,11 +93,17 @@ else:
 with st.expander("ℹ️ Como interpretar os sinais"):
     st.markdown("""
 **🟢 COMPRAR**  
-Preço bem abaixo da média móvel de 1 ano **e** distante do topo recente.
+Preço bem abaixo da média de 1 ano e distante do topo recente.
+
+**🟡 MANTER**  
+Preço próximo da média ou sem distorções relevantes.
 
 **🔴 REDUZIR**  
-Preço muito acima da média **ou** próximo do topo do último ano.
-
-**🟡 NEUTRO**  
-Sem desvios relevantes.
+Preço muito acima da média ou próximo do topo.
 """)
+
+# ===============================
+# FOOTER
+# ===============================
+
+st.caption("Modelo quantitativo • ETFs globais e Brasil • Projeto pessoal de investimentos")
