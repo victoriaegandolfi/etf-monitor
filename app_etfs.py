@@ -19,7 +19,7 @@ DASH_FILE = DATA_DIR / "dashboard_etfs.json"
 # ===============================
 
 if not DASH_FILE.exists():
-    st.error("dashboard_etfs.json não encontrado")
+    st.error("dashboard_etfs.json não encontrado em data/etfs")
     st.stop()
 
 with open(DASH_FILE, "r", encoding="utf-8") as f:
@@ -31,7 +31,6 @@ if "data" not in raw or len(raw["data"]) == 0:
 
 df = pd.DataFrame(raw["data"])
 
-# coluna correta
 if "Ticker" not in df.columns:
     st.error("Coluna 'Ticker' não encontrada no dashboard_etfs.json")
     st.stop()
@@ -49,11 +48,14 @@ st.caption(f"Atualizado em: {raw.get('updated_at', '—')}")
 
 st.sidebar.header("🔎 Filtros")
 
-signal_filter = st.sidebar.multiselect(
-    "Sinal",
-    options=sorted(df["Sinal"].dropna().unique()),
-    default=list(df["Sinal"].dropna().unique())
-)
+if "Sinal" in df.columns:
+    signal_filter = st.sidebar.multiselect(
+        "Sinal",
+        options=sorted(df["Sinal"].dropna().unique()),
+        default=list(df["Sinal"].dropna().unique())
+    )
+else:
+    signal_filter = []
 
 selected_etfs = st.sidebar.multiselect(
     "ETFs (gráfico)",
@@ -65,7 +67,10 @@ selected_etfs = st.sidebar.multiselect(
 # FILTERS
 # ===============================
 
-filtered = df[df["Sinal"].isin(signal_filter)]
+filtered = df.copy()
+
+if signal_filter and "Sinal" in filtered.columns:
+    filtered = filtered[filtered["Sinal"].isin(signal_filter)]
 
 # ===============================
 # TABELA PRINCIPAL
@@ -85,10 +90,18 @@ display_cols = [
 
 existing_cols = [c for c in display_cols if c in filtered.columns]
 
+table_df = filtered[existing_cols].copy()
+
+# ordenação segura
+if "Dist MM (%)" in table_df.columns:
+    table_df = table_df.sort_values("Dist MM (%)", ascending=True)
+elif "Dist Topo (%)" in table_df.columns:
+    table_df = table_df.sort_values("Dist Topo (%)", ascending=True)
+else:
+    table_df = table_df.sort_values("Ticker")
+
 st.dataframe(
-    filtered[existing_cols]
-    .sort_values("Dist MM (%)", ascending=True)
-    .reset_index(drop=True),
+    table_df.reset_index(drop=True),
     use_container_width=True
 )
 
@@ -102,7 +115,6 @@ if not selected_etfs:
     st.info("Selecione ao menos um ETF para o gráfico.")
 else:
     fig, ax = plt.subplots(figsize=(11, 5))
-
     plotted = False
 
     for ticker in selected_etfs:
@@ -144,4 +156,3 @@ Sem desvios relevantes em relação ao histórico.
 **🔴 REDUZIR**  
 Preço muito acima da média ou próximo do topo do último ano.
 """)
-
