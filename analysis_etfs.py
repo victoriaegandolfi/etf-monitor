@@ -99,4 +99,31 @@ for ticker in ETFS:
         result = {
             "Ticker": ticker.replace(".SA", ""),
             "Preço Atual": round(price, 2),
-            "Média 200d": None if np.isnan(mm
+            "Média 200d": None if np.isnan(mm) else round(mm, 2),
+            "Distância MM (%)": None if np.isnan(dist_mm) else round(dist_mm, 2),
+            "Distância Topo (%)": None if np.isnan(dist_topo) else round(dist_topo, 2),
+            "CAGR 5y (%)": None if np.isnan(cagr(close)) else round(cagr(close) * 100, 2),
+            "Max Drawdown (%)": None if np.isnan(max_drawdown(close)) else round(max_drawdown(close) * 100, 2),
+            "Volatilidade (%)": None if np.isnan(vol) else round(vol * 100, 2),
+            "Sinal": signal
+        }
+
+        results.append(result)
+
+    except Exception as e:
+        print(f"Erro em {ticker}: {e}")
+
+# ===============================
+# SALVAR DASHBOARD
+# ===============================
+
+output = {
+    "updated_at": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
+    "data": results
+}
+
+with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+    json.dump(output, f, indent=2, ensure_ascii=False)
+
+print("✅ dashboard_etfs.json atualizado com sucesso")
+
