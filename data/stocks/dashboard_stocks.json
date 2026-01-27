@@ -1,11 +1,11 @@
 {
-  "updated_at": "2026-01-26T13:37:21.847836",
+  "updated_at": "2026-01-27T13:39:14.705826",
   "data": [
     {
       "Ticker": "AAPL",
-      "Preço Atual": 248.04,
-      "Preço Justo (Graham)": 28.96,
-      "Desvio (%)": 756.4,
+      "Preço Atual": 255.41,
+      "Preço Justo (Graham)": 28.94,
+      "Desvio (%)": 782.44,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Fundamentalista"
@@ -24,9 +24,9 @@
     },
     {
       "Ticker": "ABEV3.SA",
-      "Preço Atual": 14.9,
-      "Preço Justo (Graham)": 11.98,
-      "Desvio (%)": 24.42,
+      "Preço Atual": 15.15,
+      "Preço Justo (Graham)": 12.03,
+      "Desvio (%)": 25.92,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Fundamentalista"
@@ -45,9 +45,9 @@
     },
     {
       "Ticker": "BBAS3.SA",
-      "Preço Atual": 24.47,
+      "Preço Atual": 24.73,
       "Preço Justo (Graham)": 40.01,
-      "Desvio (%)": -38.84,
+      "Desvio (%)": -38.19,
       "Sinal": "Comprar",
       "Estratégias": [
         "Fundamentalista",
@@ -66,29 +66,29 @@
       "Quantidade": 20.0,
       "Preço Médio": 21.0,
       "Valor Investido": 420.0,
-      "Valor Atual": 489.4,
+      "Valor Atual": 494.6,
       "Exposicao": [
         {
           "owner": "vic",
           "quantidade": 20.0,
           "preco_medio": 21.0,
           "valor_investido": 420.0,
-          "valor_atual": 489.4
+          "valor_atual": 494.6
         },
         {
           "owner": "namorado",
           "quantidade": 20.0,
           "preco_medio": 21.0,
           "valor_investido": 420.0,
-          "valor_atual": 489.4
+          "valor_atual": 494.6
         }
       ]
     },
     {
       "Ticker": "BRK-B",
-      "Preço Atual": 478.97,
+      "Preço Atual": 483.47,
       "Preço Justo (Graham)": 18480.69,
-      "Desvio (%)": -97.41,
+      "Desvio (%)": -97.38,
       "Sinal": "Comprar",
       "Estratégias": [
         "Fundamentalista"
@@ -119,10 +119,10 @@
     },
     {
       "Ticker": "ITSA4.SA",
-      "Preço Atual": 13.28,
+      "Preço Atual": 13.73,
       "Preço Justo (Graham)": 16.0,
-      "Desvio (%)": -16.99,
-      "Sinal": "Comprar",
+      "Desvio (%)": -14.18,
+      "Sinal": "Manter",
       "Estratégias": [
         "Dividendos"
       ],
@@ -148,9 +148,9 @@
     },
     {
       "Ticker": "ITUB4.SA",
-      "Preço Atual": 43.45,
+      "Preço Atual": 44.92,
       "Preço Justo (Graham)": 41.67,
-      "Desvio (%)": 4.28,
+      "Desvio (%)": 7.81,
       "Sinal": "Manter",
       "Estratégias": [
         "Fundamentalista"
@@ -177,9 +177,9 @@
     },
     {
       "Ticker": "JNJ",
-      "Preço Atual": 220.14,
+      "Preço Atual": 221.49,
       "Preço Justo (Graham)": 90.42,
-      "Desvio (%)": 143.45,
+      "Desvio (%)": 144.94,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Fundamentalista",
@@ -199,9 +199,9 @@
     },
     {
       "Ticker": "KO",
-      "Preço Atual": 72.88,
+      "Preço Atual": 72.56,
       "Preço Justo (Graham)": 22.22,
-      "Desvio (%)": 228.06,
+      "Desvio (%)": 226.62,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Dividendos"
@@ -221,9 +221,9 @@
     },
     {
       "Ticker": "MSFT",
-      "Preço Atual": 465.95,
-      "Preço Justo (Graham)": 124.34,
-      "Desvio (%)": 274.73,
+      "Preço Atual": 470.28,
+      "Preço Justo (Graham)": 124.3,
+      "Desvio (%)": 278.34,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Fundamentalista"
@@ -242,9 +242,9 @@
     },
     {
       "Ticker": "PETR4.SA",
-      "Preço Atual": 35.47,
-      "Preço Justo (Graham)": 64.87,
-      "Desvio (%)": -45.32,
+      "Preço Atual": 35.53,
+      "Preço Justo (Graham)": 64.93,
+      "Desvio (%)": -45.28,
       "Sinal": "Comprar",
       "Estratégias": [
         "Dividendos"
@@ -260,22 +260,22 @@
       "Quantidade": 13.0,
       "Preço Médio": 33.43,
       "Valor Investido": 434.59,
-      "Valor Atual": 461.11,
+      "Valor Atual": 461.89,
       "Exposicao": [
         {
           "owner": "vic",
           "quantidade": 13.0,
           "preco_medio": 33.43,
           "valor_investido": 434.59,
-          "valor_atual": 461.11
+          "valor_atual": 461.89
         }
       ]
     },
     {
       "Ticker": "PG",
-      "Preço Atual": 150.15,
+      "Preço Atual": 149.49,
       "Preço Justo (Graham)": 58.49,
-      "Desvio (%)": 156.71,
+      "Desvio (%)": 155.58,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Dividendos"
@@ -294,9 +294,9 @@
     },
     {
       "Ticker": "TAEE11.SA",
-      "Preço Atual": 42.94,
-      "Preço Justo (Graham)": 23.33,
-      "Desvio (%)": 84.06,
+      "Preço Atual": 43.84,
+      "Preço Justo (Graham)": 23.44,
+      "Desvio (%)": 87.06,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Dividendos"
@@ -333,9 +333,9 @@
     },
     {
       "Ticker": "VALE3.SA",
-      "Preço Atual": 85.43,
-      "Preço Justo (Graham)": 88.55,
-      "Desvio (%)": -3.52,
+      "Preço Atual": 83.89,
+      "Preço Justo (Graham)": 88.61,
+      "Desvio (%)": -5.33,
       "Sinal": "Manter",
       "Estratégias": [
         "Fundamentalista"
@@ -356,9 +356,9 @@
     },
     {
       "Ticker": "VZ",
-      "Preço Atual": 39.52,
+      "Preço Atual": 39.62,
       "Preço Justo (Graham)": 51.27,
-      "Desvio (%)": -22.92,
+      "Desvio (%)": -22.73,
       "Sinal": "Comprar",
       "Estratégias": [
         "Dividendos"
@@ -377,9 +377,9 @@
     },
     {
       "Ticker": "WEGE3.SA",
-      "Preço Atual": 50.98,
-      "Preço Justo (Graham)": 13.65,
-      "Desvio (%)": 273.54,
+      "Preço Atual": 52.15,
+      "Preço Justo (Graham)": 13.6,
+      "Desvio (%)": 283.35,
       "Sinal": "Reduzir",
       "Estratégias": [
         "Fundamentalista"
